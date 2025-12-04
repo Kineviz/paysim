@@ -1,0 +1,5 @@
+google_auth_keyfile.json
+.venv/
+__pycache__/
+*.pyc
+tempCodeRunnerFile.py
