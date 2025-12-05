@@ -58,7 +58,7 @@ uv run data-injection/spanner-schema/import_paysim.py
 ```
 
 The script will read the prepared CSVs and load nodes/edges into the Spanner
-graph.
+as tables, then run DDL declared in graph_view.sql to create a graph.
 
 ## Test queries
 
