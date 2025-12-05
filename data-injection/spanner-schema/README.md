@@ -18,7 +18,7 @@ Google Cloud Spanner using property graph schema.
 Run the local data pipeline to generate the datasets used by the importer:
 
 ```powershell
-uv run src/data_pipeline.py
+uv run src/prepare_data.py
 ```
 
 (If your environment uses `uv` as a runner — keep using it. Otherwise run the

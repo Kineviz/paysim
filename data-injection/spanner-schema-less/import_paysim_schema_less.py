@@ -16,6 +16,8 @@ databaseName = "paysim_schema_less"
 graphName = "paysim_schema_less_graph"
 
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
+raw_data_dir = os.path.join(data_dir, 'raw')
+processed_data_dir = os.path.join(data_dir, 'processed')
 
 def get_spanner_client():
     try:
@@ -162,8 +164,17 @@ def prepare_data(csv_file, labelName , is_relationship=False):
     """Prepare data by normalizing column names and creating IDs"""
     try:
         labelName = labelName.lower().strip()
+        # Determine which directory to read from
+        # Original files (clients.csv, merchants.csv) are in raw/
+        # All processed files are in processed/
+        csv_filename = os.path.basename(csv_file) if os.path.isabs(csv_file) or os.path.sep in csv_file else csv_file
+        if csv_filename in ['clients.csv', 'merchants.csv']:
+            file_path = os.path.join(raw_data_dir, csv_filename)
+        else:
+            file_path = os.path.join(processed_data_dir, csv_filename)
+        
         # Read CSV file
-        df = pd.read_csv(os.path.join(data_dir, csv_file),  sep=',')
+        df = pd.read_csv(file_path,  sep=',')
         print(f"Read {len(df)} rows from {csv_file}")
         
         # Convert column names to lowercase
@@ -317,7 +328,7 @@ def import_data(database):
     # Process and load all files
     for csv_file, table_name, is_relationship in files_to_load:
         print(f"\nProcessing {csv_file} -> {table_name} (is_relationship={is_relationship})")
-        df = prepare_data(os.path.join(data_dir, csv_file), table_name, is_relationship)
+        df = prepare_data(csv_file, table_name, is_relationship)
         if df is not None:
             load_csv_to_spanner(database, df, table_name, is_relationship)
 

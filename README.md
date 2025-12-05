@@ -11,17 +11,25 @@ Specifically, we utilize PaySim 2, a version developed by David Voutila. After c
 ## Quick Start
 
 ```bash
-# Install and setup
+# Clone this repository
+git clone git@github.com:Kineviz/paysim.git
+
+cd paysim
+
+# Install and setup uv
 pip install uv
 uv venv --python=python3.11
+
 .venv\Scripts\activate  # Windows; Linux/Mac: source .venv/bin/activate
+
+# Install dependencies
 uv pip install pandas google-cloud-bigquery google-cloud-spanner pandas-gbq db-dtypes
 
 # Generate graph data
-uv run src/data_pipeline.py
+uv run src/prepare_data.py
 ```
 
-**Requirements:** Python 3.11, GCP credentials, PaySim CSVs (`transactions.csv`, `clients.csv`, `merchants.csv`)
+**Requirements:** Python 3.11, GCP credentials, PaySim CSVs (`data/raw/transactions.csv`, `data/raw/clients.csv`, `data/raw/merchants.csv`)
 
 ## Data Pipeline
 

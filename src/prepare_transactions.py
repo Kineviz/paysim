@@ -5,6 +5,8 @@ import random
 import os
 
 data_dir = os.path.join(os.path.dirname(__file__), '..', 'data')
+raw_data_dir = os.path.join(data_dir, 'raw')
+processed_data_dir = os.path.join(data_dir, 'processed')
 
 def prepare_transactions(input_file, output_file):
     """
@@ -50,8 +52,8 @@ def prepare_transactions(input_file, output_file):
     print(df[['globalstep', 'timestamp']].head())
 
 def main():
-    input_file = os.path.join(data_dir,'transactions.csv')
-    output_file = os.path.join(data_dir, 'transactions_cleaned.csv')
+    input_file = os.path.join(raw_data_dir, 'transactions.csv')
+    output_file = os.path.join(processed_data_dir, 'transactions_cleaned.csv')
     
     try:
         prepare_transactions(input_file, output_file)

@@ -3,3 +3,7 @@ google_auth_keyfile.json
 __pycache__/
 *.pyc
 tempCodeRunnerFile.py
+
+# Ignore data/processed directory contents (all generated files)
+data/processed/*
+!data/processed/.gitkeep

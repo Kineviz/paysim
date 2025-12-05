@@ -9,7 +9,7 @@ Import Paysim transaction data into Google Cloud Spanner using schema-less prope
 - GCP project with Spanner instance/database
 - Service account JSON key with Spanner permissions
 - Python 3.8+
-- Prepared CSV files from `data/` (run `uv run src/data_pipeline.py` if needed)
+- Prepared CSV files from `data/processed/` (run `uv run src/prepare_data.py` if needed)
 
 ## Graph Schema (Schema-less)
 > Schema-less mode uses lowercase labels only.

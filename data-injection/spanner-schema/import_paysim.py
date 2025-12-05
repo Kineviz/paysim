@@ -11,6 +11,8 @@ graphName = "graph_view"
 
 
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
+raw_data_dir = os.path.join(data_dir, 'raw')
+processed_data_dir = os.path.join(data_dir, 'processed')
 
 def delete_all_tables(database):
     """Delete all tables in the specified database"""
@@ -122,8 +124,16 @@ def create_dataset(spanner_client, instance_name, database_name):
 def prepare_data(csv_file, is_transaction=False):
     """Prepare data by normalizing column names and creating IDs"""
     try:
+        # Determine which directory to read from
+        # Original files (clients.csv, merchants.csv) are in raw/
+        # All processed files are in processed/
+        if csv_file in ['clients.csv', 'merchants.csv']:
+            file_path = os.path.join(raw_data_dir, csv_file)
+        else:
+            file_path = os.path.join(processed_data_dir, csv_file)
+        
         # Read CSV file
-        df = pd.read_csv(os.path.join(data_dir, csv_file))
+        df = pd.read_csv(file_path)
         print(f"Read {len(df)} rows from {csv_file}")
         
         # Convert column names to lowercase

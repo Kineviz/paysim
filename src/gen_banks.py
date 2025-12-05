@@ -3,6 +3,8 @@ import numpy as np
 import os
 
 data_dir = os.path.join(os.path.dirname(__file__), '..', 'data')
+raw_data_dir = os.path.join(data_dir, 'raw')
+processed_data_dir = os.path.join(data_dir, 'processed')
 
 def generate_bank_id():
     """Generate bank ID in format XX-XXXXXXX where X are digits"""
@@ -10,7 +12,7 @@ def generate_bank_id():
 def extract_banks():
     """Extract unique banks from transactions and create banks.csv"""
     # Read transactions
-    df = pd.read_csv(os.path.join(data_dir, 'transactions.csv'))
+    df = pd.read_csv(os.path.join(raw_data_dir, 'transactions.csv'))
     
     # Find all rows where typedest or typeorig is 'BANK'
     bank_data = []
@@ -33,7 +35,7 @@ def extract_banks():
     # Sort by ID
     banks_df = banks_df.sort_values(by='id').reset_index(drop=True)
     # Save to CSV
-    output_path = os.path.join(data_dir, 'banks.csv')
+    output_path = os.path.join(processed_data_dir, 'banks.csv')
     banks_df.to_csv(output_path, index=False)
     print("\nSample of banks:")
     print(banks_df.head())
