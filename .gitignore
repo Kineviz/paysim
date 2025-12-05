@@ -7,3 +7,6 @@ tempCodeRunnerFile.py
 # Ignore data/processed directory contents (all generated files)
 data/processed/*
 !data/processed/.gitkeep
+
+# Ignore macOS system files
+.DS_Store
