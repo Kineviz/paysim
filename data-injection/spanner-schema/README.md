@@ -85,5 +85,15 @@ The test checks:
 ## Troubleshooting
 
 - If authentication fails, ensure `google_auth_keyfile.json` is valid and the
-  service account has Spanner access.
+  service account has Spanner Database Admin access, for table creation and uploading.
+- **Important:** Spanner Graph is only available on Spanner Enterprise, not on Spanner Standard.
 
+### GCP Console Setup Steps
+
+If you haven't set up your GCP resources yet, follow these steps:
+
+1. Create a GCP project
+2. Create a Spanner instance (select **Enterprise** edition for graph support)
+3. Create a database within the instance
+4. Create a service account with the **Spanner Database Admin** role
+5. Download the service account JSON key file
