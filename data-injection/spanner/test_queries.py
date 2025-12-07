@@ -10,29 +10,15 @@ instanceName = "demo-2025"
 databaseName = "paysim"
 graphName = "graph_view"
 
-def run_test_query(client, database):
+def run_test_query(query, database):
     """Run a test query on the Spanner database"""
-    
-    
-    query = f"""
-GRAPH {graphName}
-MATCH
-  (n:Client)-[r:PERFORMS]->(m:Transaction)
-RETURN TO_JSON(
-    [TO_JSON(n), TO_JSON(r), TO_JSON(m)]
-  ) as path_json
-LIMIT 1
-    """
-    
     try:
-       
         with database.snapshot() as snapshot:
             results = snapshot.execute_sql(query)
             
             print("\nTest Query Results:")
             for row in results:
-                print(f"Client ID: {row[0]}")
-            
+                print(f"test data: {row}")
         return True
         
     except Exception as e:
@@ -62,7 +48,21 @@ def main():
         instance = client.instance(instanceName)
         database = instance.database(databaseName)
         
-        success = run_test_query(client, database)
+        success = run_test_query(f'''
+GRAPH {graphName}
+MATCH (n)
+RETURN DISTINCT LABELS(n)[0] as lableName, COUNT(n) as cnt
+GROUP BY lableName
+                                 ''', database)
+        
+            
+        success = run_test_query(f'''
+GRAPH {graphName}
+MATCH
+  (n:Client)-[r:PERFORMS]->(m:Transaction)
+RETURN TO_JSON(n) as n_node, TO_JSON(r) as r_relationship, TO_JSON(m) as m_node
+LIMIT 1
+''', database)
         
         sys.exit(0 if success else 1)
         
