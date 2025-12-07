@@ -5,8 +5,15 @@ import os
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
-datasetName="paysim_graph"
-graphName="graph_view"
+from dotenv import load_dotenv
+
+#automatically load .env file
+load_dotenv()
+
+# Load configuration
+datasetName = os.getenv('DATASET_NAME') or "paysim_graph"
+graphName = os.getenv('GRAPH_NAME') or "graph_view"
+google_auth_keyfile = os.getenv('GOOGLE_AUTH_KEYFILE') or 'google_auth_keyfile.json'
 
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
 raw_data_dir = os.path.join(data_dir, 'raw')
@@ -188,7 +195,7 @@ def load_csv_to_bigquery(client, dataset_id, df, table_name):
 def main():
     # Initialize BigQuery client
     credentials = service_account.Credentials.from_service_account_file(
-        os.path.join(os.path.dirname(__file__), 'google_auth_keyfile.json')
+        os.path.join(os.path.dirname(__file__), google_auth_keyfile)
     )
     client = bigquery.Client(credentials=credentials, project=credentials.project_id)
 

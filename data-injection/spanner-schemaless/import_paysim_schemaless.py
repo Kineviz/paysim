@@ -8,12 +8,25 @@ import decimal
 import random
 import string
 import os
+import sys
 from google.cloud import spanner
 from google.oauth2 import service_account
+from google.auth.credentials import AnonymousCredentials
 
-instanceName = "demo-2025"
-databaseName = "paysim_schemaless"
-graphName = "paysim_schemaless_graph"
+from dotenv import load_dotenv
+
+#automatically load .env file
+load_dotenv()
+
+# Load configuration
+instanceName = os.getenv('INSTANCE_NAME')
+if not instanceName:
+    print("Error: INSTANCE_NAME is not set in environment variables.", file=sys.stderr)
+    sys.exit(1)
+databaseName = os.getenv('DATABASE_NAME') or "paysim_schemaless"
+graphName = os.getenv('GRAPH_NAME') or "paysim_schemaless_graph"
+google_auth_keyfile = os.getenv('GOOGLE_AUTH_KEYFILE') or 'google_auth_keyfile.json'
+
 
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
 raw_data_dir = os.path.join(data_dir, 'raw')
@@ -22,11 +35,27 @@ processed_data_dir = os.path.join(data_dir, 'processed')
 def get_spanner_client():
     try:
         print("Initializing Spanner client...")
-        credentials = service_account.Credentials.from_service_account_file(
-            os.path.join(os.path.dirname(__file__), 'google_auth_keyfile.json')
-        )
-        client = spanner.Client(credentials=credentials)
-        print(f"Connected to GCP project: {client.project}")
+        auth_keyfile_path = os.path.join(os.path.dirname(__file__), google_auth_keyfile)
+        if not os.path.exists(auth_keyfile_path):
+            raise FileNotFoundError(
+                f"Service account key file not found: {auth_keyfile_path}\n"
+                "Please ensure the google_auth_keyfile path in config.json is correct."
+            )
+        authJSON = json.load(open(auth_keyfile_path))
+        project_id = authJSON.get("project_id")
+        emulator_host = os.getenv("SPANNER_EMULATOR_HOST") or authJSON.get("emulator_host")
+        if emulator_host:
+            print(f"Connecting to Spanner emulator at {emulator_host} for project: {project_id}")
+            client = spanner.Client(project=project_id, 
+                                    credentials=AnonymousCredentials(),
+                                    client_options={"api_endpoint": emulator_host}
+                                    )
+            print(f"Connected to Spanner emulator: {client.project}")
+        else:
+            print(f"Connecting to GCP Spanner project: {project_id}")
+            credentials = service_account.Credentials.from_service_account_file(auth_keyfile_path)
+            client = spanner.Client(credentials=credentials)
+            print(f"Connected to GCP project: {client.project}")
         return client
     except Exception as e:
         print(f"Error initializing Spanner client: {e}")
@@ -68,12 +97,16 @@ def delete_all_tables(database):
                 "SELECT table_name FROM information_schema.tables WHERE table_schema = ''"
             )
             tables = [row[0] for row in results]
+            #put graphEdge first to avoid foreign key constraint issue
+            tables.sort(key=lambda x: 0 if x == 'GraphEdge' else 1)
 
         if not tables:
             print("No tables to delete")
             return database
 
         # Construct DDL statements to drop tables
+
+        
         ddl_statements = [f"DROP TABLE {table}" for table in tables]
 
         # Execute DDL statements to drop tables

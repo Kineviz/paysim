@@ -45,25 +45,34 @@ graph LR
 **Edges:** performs, to_client, to_merchant, to_bank, has_email, has_phone, has_ssn
 
 
-## Setup
+## Configure Google service account json keyfile information
 
-**1. Configure service account:**
+1. Copy the example keyfile and add your service account credentials:
 
 ```powershell
-cd data-injection/spanner-schemaless
+cd data-injection/spanner
 cp google_auth_keyfile.example.json google_auth_keyfile.json
 ```
 
-Edit `google_auth_keyfile.json` and paste your service account key.
+2. Edit `google_auth_keyfile.json` and paste the service-account key JSON you
+   downloaded from the GCP Console.
 
-**2. Configure import settings:**
+## Configure import settings
 
-Edit `import_paysim_schemaless.py`:
+1. Copy the example env file and update it with your Spanner details:
 
-```python
-instanceName = "your-instance-name"
-databaseName = "your-database-name"
-graphName = "your-graph-name"
+```powershell
+cd data-injection/spanner-schemaless
+cp example.env .env
+```
+
+2. Edit `.env` and set your Spanner configuration:
+
+```
+INSTANCE_NAME="your-instance-name"
+DATABASE_NAME="paysim_schemaless"
+GRAPH_NAME="paysim_schemaless_graph"
+GOOGLE_AUTH_KEYFILE="google_auth_keyfile.json"
 ```
 
 ## Run Import

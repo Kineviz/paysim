@@ -5,10 +5,20 @@ from pathlib import Path
 from google.cloud import spanner
 from google.oauth2 import service_account
 from google.auth.credentials import AnonymousCredentials
+from dotenv import load_dotenv
 
-instanceName = "demo-2025"
-databaseName = "paysim"
-graphName = "graph_view"
+#automatically load .env file
+load_dotenv()
+
+# Load configuration
+instanceName = os.getenv('INSTANCE_NAME')
+if not instanceName:
+    print("Error: INSTANCE_NAME is not set in environment variables.", file=sys.stderr)
+    sys.exit(1)
+databaseName = os.getenv('DATABASE_NAME') or "paysim"
+graphName = os.getenv('GRAPH_NAME') or "graph_view"
+google_auth_keyfile = os.getenv('GOOGLE_AUTH_KEYFILE') or 'google_auth_keyfile.json'
+
 
 def run_test_query(query, database):
     """Run a test query on the Spanner database"""
@@ -62,6 +72,11 @@ MATCH
   (n:Client)-[r:PERFORMS]->(m:Transaction)
 RETURN TO_JSON(n) as n_node, TO_JSON(r) as r_relationship, TO_JSON(m) as m_node
 LIMIT 1
+''', database)
+        
+        success = run_test_query(f'''
+SELECT count(*) as client_count
+FROM Client 
 ''', database)
         
         sys.exit(0 if success else 1)

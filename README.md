@@ -23,7 +23,7 @@ uv venv --python=python3.11
 .venv\Scripts\activate  # Windows; Linux/Mac: source .venv/bin/activate
 
 # Install dependencies
-uv pip install pandas google-cloud-bigquery google-cloud-spanner pandas-gbq db-dtypes
+uv pip install pandas google-cloud-bigquery google-cloud-spanner pandas-gbq db-dtypes python-dotenv
 
 # Prepare data to be loaded to Spanner or BigQuery
 uv run src/prepare_data.py

@@ -1,40 +1,25 @@
 # Import required libraries
 import sys
+import os
+import json
 import pandas as pd 
 from google.cloud import spanner
 from google.oauth2 import service_account
 from google.auth.credentials import AnonymousCredentials
-import os
-import json
+from dotenv import load_dotenv
 
-# Load configuration from config.json
-def load_config():
-    """Load configuration from config.json file"""
-    config_path = os.path.join(os.path.dirname(__file__), 'config.json')
-    if not os.path.exists(config_path):
-        raise FileNotFoundError(
-            f"Configuration file not found: {config_path}\n"
-            "Please copy config.example.json to config.json and update it with your settings."
-        )
-    
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-    
-    # Validate required fields
-    required_fields = ['instance_name', 'database_name', 'graph_name', 'google_auth_keyfile']
-    for field in required_fields:
-        if field not in config:
-            raise ValueError(f"Missing required configuration field: {field}")
-    
-    return config
+#automatically load .env file
+load_dotenv()
 
 # Load configuration
-config = load_config()
-instanceName = config['instance_name']
-databaseName = config['database_name']
-graphName = config['graph_name']
-google_auth_keyfile = config['google_auth_keyfile']
-
+instanceName = os.getenv('INSTANCE_NAME')
+if not instanceName:
+    print("Error: INSTANCE_NAME is not set in environment variables.", file=sys.stderr)
+    sys.exit(1)
+databaseName = os.getenv('DATABASE_NAME') or "paysim"
+graphName = os.getenv('GRAPH_NAME') or "graph_view"
+google_auth_keyfile = os.getenv('GOOGLE_AUTH_KEYFILE') or 'google_auth_keyfile.json'
+    
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
 raw_data_dir = os.path.join(data_dir, 'raw')
 processed_data_dir = os.path.join(data_dir, 'processed')

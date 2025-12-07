@@ -38,22 +38,20 @@ cp google_auth_keyfile.example.json google_auth_keyfile.json
 
 ## Configure import settings
 
-1. Copy the example config file and update it with your Spanner details:
+1. Copy the example env file and update it with your Spanner details:
 
 ```powershell
 cd data-injection/spanner
-cp config.example.json config.json
+cp example.env .env
 ```
 
-2. Edit `config.json` and set your Spanner configuration:
+2. Edit `.env` and set your Spanner configuration:
 
-```json
-{
-  "instance_name": "your-instance-name",
-  "database_name": "your-database-name",
-  "graph_name": "graph_view",
-  "google_auth_keyfile": "google_auth_keyfile.json"
-}
+```
+INSTANCE_NAME="your-instance-name"
+DATABASE_NAME="paysim"
+GRAPH_NAME="graph_view"
+GOOGLE_AUTH_KEYFILE="google_auth_keyfile.json"
 ```
 
 ## Run the import

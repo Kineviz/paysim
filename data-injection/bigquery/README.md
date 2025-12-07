@@ -32,15 +32,21 @@ cp google_auth_keyfile.example.json google_auth_keyfile.json
 
 ## Configure import settings
 
-Open `import_to_bigquery.py` and set the target BigQuery details:
+1. Copy the example env file and update it with your Spanner details:
 
-```python
-dataset = "your-dataset-name"
-graphName="your-property-graph-name"
+```powershell
+cd data-injection/bigquery
+cp example.env .env
 ```
 
-Adjust any other settings in `import_to_bigquery.py` if needed (batch sizes, CSV
-paths, etc.).
+2. Edit `.env` and set your Spanner configuration:
+
+```
+DATASET_NAME="paysim_graph"
+GRAPH_NAME="graph_view"
+GOOGLE_AUTH_KEYFILE="google_auth_keyfile.json"
+```
+
 
 ## Run the import
 
