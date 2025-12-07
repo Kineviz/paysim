@@ -49,8 +49,9 @@ See [Data Preparation Pipeline](src/README.md) for details. The pipeline generat
 
 Now that data is loaded in Spanner or BigQuery, and you run DDL to define a graph, you can connect GraphXR Explorer to it following instruction on Google Cloud Marketplace:
 
-- [GraphXR Explorer for Spanner](https://console.cloud.google.com/marketplace/product/kineviz-public/graphxr-explorer-spanner)
-- [GraphXR Explorer for BigQuery](https://console.cloud.google.com/marketplace/product/kineviz-public/graphxr-explorer-for-bigquery)
+- [GraphXR Explorer for Spanner on GCP Marketplace](https://console.cloud.google.com/marketplace/product/kineviz-public/graphxr-explorer-spanner)
+    - [Quick Start Guide](QuickStart_GraphXR_Explorer_Spanner.pdf)
+- [GraphXR Explorer for BigQuery on GCP Marketplace](https://console.cloud.google.com/marketplace/product/kineviz-public/graphxr-explorer-for-bigquery)
 
 Or create an account on [https://graphxr.kineviz.com/](https://graphxr.kineviz.com/) and connect to your instance.
 
