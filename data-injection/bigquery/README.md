@@ -23,7 +23,7 @@ pipeline with the command your environment expects.)
 1. Copy the example keyfile and add your service account credentials:
 
 ```powershell
-cd data-injection/biguqery
+cd data-injection/bigquery
 cp google_auth_keyfile.example.json google_auth_keyfile.json
 ```
 
@@ -47,7 +47,7 @@ paths, etc.).
 From this folder run:
 
 ```powershell
-uv run  data-injection/biguqery/import_to_bigquery.py
+uv run  data-injection/bigquery/import_to_bigquery.py
 ```
 
 The script will read the prepared CSVs and load nodes/edges into the BigQuery
@@ -58,7 +58,7 @@ graph.
 You can run the included test queries to validate the import:
 
 ```powershell
-uv run  data-injection/biguqery/test_queries.py
+uv run  data-injection/bigquery/test_queries.py
 ```
 
 Example (graph query to fetch a Client → Transaction path):

@@ -3,6 +3,7 @@ import sys
 import pandas as pd 
 from google.cloud import spanner
 from google.oauth2 import service_account
+from google.auth.credentials import AnonymousCredentials
 import os
 import json
 
@@ -395,9 +396,21 @@ def main():
                 f"Service account key file not found: {auth_keyfile_path}\n"
                 "Please ensure the google_auth_keyfile path in config.json is correct."
             )
-        credentials = service_account.Credentials.from_service_account_file(auth_keyfile_path)
-        client = spanner.Client(credentials=credentials)
-        print(f"Connected to GCP project: {client.project}")
+        authJSON = json.load(open(auth_keyfile_path))
+        project_id = authJSON.get("project_id")
+        emulator_host = os.getenv("SPANNER_EMULATOR_HOST") or authJSON.get("emulator_host")
+        if emulator_host:
+            print(f"Connecting to Spanner emulator at {emulator_host} for project: {project_id}")
+            client = spanner.Client(project=project_id, 
+                                    credentials=AnonymousCredentials(),
+                                    client_options={"api_endpoint": emulator_host}
+                                    )
+            print(f"Connected to Spanner emulator: {client.project}")
+        else:
+            print(f"Connecting to GCP Spanner project: {project_id}")
+            credentials = service_account.Credentials.from_service_account_file(auth_keyfile_path)
+            client = spanner.Client(credentials=credentials)
+            print(f"Connected to GCP project: {client.project}")
 
         # Create Spanner instance and database
         print("2. Setting up Spanner instance and database...")

@@ -1,8 +1,10 @@
+import json
 import os
 import sys
 from pathlib import Path
 from google.cloud import spanner
 from google.oauth2 import service_account
+from google.auth.credentials import AnonymousCredentials
 
 instanceName = "demo-2025"
 databaseName = "paysim"
@@ -15,10 +17,9 @@ def run_test_query(client, database):
     query = f"""
 GRAPH {graphName}
 MATCH
-  (c:Client)-[p:PERFORMS]->(t:Transaction)
-RETURN 
-  TO_JSON(
-    [TO_JSON(c), TO_JSON(p), TO_JSON(t)]
+  (n:Client)-[r:PERFORMS]->(m:Transaction)
+RETURN TO_JSON(
+    [TO_JSON(n), TO_JSON(r), TO_JSON(m)]
   ) as path_json
 LIMIT 1
     """
@@ -30,7 +31,7 @@ LIMIT 1
             
             print("\nTest Query Results:")
             for row in results:
-                print(row[0])
+                print(f"Client ID: {row[0]}")
             
         return True
         
@@ -41,11 +42,22 @@ LIMIT 1
 def main():
     try:
         # Initialize Spanner client
-        credentials = service_account.Credentials.from_service_account_file(
-            os.path.join(os.path.dirname(__file__), 'google_auth_keyfile.json')
-        )
- 
-        client = spanner.Client(credentials=credentials)
+        auth_keyfile_path =  os.path.join(os.path.dirname(__file__), 'google_auth_keyfile.json')
+        authJSON = json.load(open(auth_keyfile_path))
+        project_id = authJSON.get("project_id")
+        emulator_host = os.getenv("SPANNER_EMULATOR_HOST") or authJSON.get("emulator_host")
+        if emulator_host:
+            print(f"Connecting to Spanner emulator at {emulator_host} for project: {project_id}")
+            client = spanner.Client(project=project_id, 
+                                    credentials=AnonymousCredentials(),
+                                    client_options={"api_endpoint": emulator_host}
+                                    )
+            print(f"Connected to Spanner emulator: {client.project}")
+        else:
+            print(f"Connecting to GCP Spanner project: {project_id}")
+            credentials = service_account.Credentials.from_service_account_file(auth_keyfile_path)
+            client = spanner.Client(credentials=credentials)
+            print(f"Connected to GCP project: {client.project}")
         
         instance = client.instance(instanceName)
         database = instance.database(databaseName)

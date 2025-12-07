@@ -43,7 +43,7 @@ See [Data Preparation Pipeline](src/README.md) for details. The pipeline generat
 
 - [Spanner with Schema](data-injection/spanner/README.md)
 - [Spanner Schemaless](data-injection/spanner-schemaless/README.md) *(Note: uses lowercase labels)*
-- [BigQuery](data-injection/biguqery/README.md)
+- [BigQuery](data-injection/bigquery/README.md)
 
 ## Connect to GraphXR Explorer
 
