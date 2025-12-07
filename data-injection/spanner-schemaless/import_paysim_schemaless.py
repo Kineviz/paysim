@@ -12,8 +12,8 @@ from google.cloud import spanner
 from google.oauth2 import service_account
 
 instanceName = "demo-2025"
-databaseName = "paysim_schema_less"
-graphName = "paysim_schema_less_graph"
+databaseName = "paysim_schemaless"
+graphName = "paysim_schemaless_graph"
 
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
 raw_data_dir = os.path.join(data_dir, 'raw')
@@ -133,11 +133,11 @@ def create_database(spanner_client, instance_name, database_name):
         raise
 
 
-def create_schema_less_graph(database):
-    ## read schema-less.sql and execute the DDL statements
+def create_schemaless_graph(database):
+    ## read schemaless.sql and execute the DDL statements
     try:
         ddl_statements = []
-        with open(os.path.join(os.path.dirname(__file__), 'schema-less.sql'), 'r') as f:
+        with open(os.path.join(os.path.dirname(__file__), 'schemaless.sql'), 'r') as f:
             ddl_statements = f.read().split(';')
             ddl_statements = [stmt.strip() for stmt in ddl_statements if stmt.strip()]
 
@@ -146,9 +146,9 @@ def create_schema_less_graph(database):
 
         operation = database.update_ddl(ddl_statements)
         operation.result()
-        print(f"Created schema-less graph tables")
+        print(f"Created schemaless graph tables")
     except Exception as e:
-        print(f"Error creating schema-less graph: {e}")
+        print(f"Error creating schemaless graph: {e}")
         raise
 
 def safe_json(x, exclude_columns):
@@ -304,7 +304,7 @@ def load_csv_to_spanner(database, df, labelName, is_relationship=False):
 
 def import_data(database):
         # Define files to load
-    ## schema-less all name to lower case
+    ## schemaless all name to lower case
     files_to_load = [
         # # Entity tables
         ("transactions_cleaned.csv", "transaction", False),
@@ -343,8 +343,8 @@ def main():
         print("2. Deleting all existing tables and views...")
         database = delete_all_tables(database)
 
-        print("3. Creating schema-less graph structure...")
-        create_schema_less_graph(database)
+        print("3. Creating schemaless graph structure...")
+        create_schemaless_graph(database)
 
         print("4. Importing CSV data into Spanner...")
 

@@ -41,8 +41,8 @@ See [Data Preparation Pipeline](src/README.md) for details. The pipeline generat
 
 ## Import to Cloud
 
-- [Spanner with Schema](data-injection/spanner-schema/README.md)
-- [Spanner Schema-less](data-injection/spanner-schema-less/README.md) *(Note: uses lowercase labels)*
+- [Spanner with Schema](data-injection/spanner/README.md)
+- [Spanner Schemaless](data-injection/spanner-schemaless/README.md) *(Note: uses lowercase labels)*
 - [BigQuery](data-injection/biguqery/README.md)
 
 ## Connect to GraphXR Explorer

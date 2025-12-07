@@ -6,8 +6,8 @@ from google.oauth2 import service_account
 
 
 instanceName = "demo-2025"
-databaseName = "paysim_schema_less"
-graphName = "paysim_schema_less_graph"
+databaseName = "paysim_schemaless"
+graphName = "paysim_schemaless_graph"
 
 
 def run_test_query(client, database):

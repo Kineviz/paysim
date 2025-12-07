@@ -1,8 +1,8 @@
-# Paysim → Spanner Schema-less Graph Import
+# Paysim → Spanner Schemaless Graph Import
 
 [← Back to Home](../../README.md)
 
-Import Paysim transaction data into Google Cloud Spanner using schema-less property graph mode.
+Import Paysim transaction data into Google Cloud Spanner using schemaless property graph mode.
 
 ## Prerequisites
 
@@ -11,8 +11,8 @@ Import Paysim transaction data into Google Cloud Spanner using schema-less prope
 - Python 3.8+
 - Prepared CSV files from `data/processed/` (run `uv run src/prepare_data.py` if needed)
 
-## Graph Schema (Schema-less)
-> Schema-less mode uses lowercase labels only.
+## Graph Schema (Schemaless)
+> Schemaless mode uses lowercase labels only.
 
 ```mermaid
 graph LR
@@ -50,7 +50,7 @@ graph LR
 **1. Configure service account:**
 
 ```powershell
-cd data-injection/spanner-schema-less
+cd data-injection/spanner-schemaless
 cp google_auth_keyfile.example.json google_auth_keyfile.json
 ```
 
@@ -58,7 +58,7 @@ Edit `google_auth_keyfile.json` and paste your service account key.
 
 **2. Configure import settings:**
 
-Edit `import_paysim_schema_less.py`:
+Edit `import_paysim_schemaless.py`:
 
 ```python
 instanceName = "your-instance-name"
@@ -69,19 +69,19 @@ graphName = "your-graph-name"
 ## Run Import
 
 ```powershell
-uv run  data-injection/spanner-schema-less/import_paysim_schema_less.py
+uv run  data-injection/spanner-schemaless/import_paysim_schemaless.py
 ```
 
 ## Test
 
 ```powershell
-uv run  data-injection/spanner-schema-less/test_queries.py
+uv run  data-injection/spanner-schemaless/test_queries.py
 ```
 
 Example query:
 
 ```sql
-GRAPH paysim_schema_less_graph
+GRAPH paysim_schemaless_graph
 MATCH (n:client)-[r:performs]->(m:transaction)
 RETURN SAFE_TO_JSON(
     [TO_JSON(n), TO_JSON(r), TO_JSON(m)]
@@ -94,7 +94,7 @@ LIMIT 1
 **GraphNode** (vertices): `id`, `label`, `properties` (JSON)  
 **GraphEdge** (edges): `id`, `dest_id`, `edge_id`, `label`, `properties` (JSON)
 
-See `schema-less.sql` for DDL.
+See `schemaless.sql` for DDL.
 
 ## Known Issues
 
@@ -118,4 +118,4 @@ MATCH (n)-[r:`has_phone`]->(m)
 
 ## Reference
 
-[Spanner Schema-less Graph Documentation](https://cloud.google.com/spanner/docs/graph/manage-schemaless-data)
+[Spanner Schemaless Graph Documentation](https://cloud.google.com/spanner/docs/graph/manage-schemaless-data)

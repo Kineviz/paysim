@@ -29,7 +29,7 @@ pipeline with the command your environment expects.)
 1. Copy the example keyfile and add your service account credentials:
 
 ```powershell
-cd data-injection/spanner-schema
+cd data-injection/spanner
 cp google_auth_keyfile.example.json google_auth_keyfile.json
 ```
 
@@ -41,7 +41,7 @@ cp google_auth_keyfile.example.json google_auth_keyfile.json
 1. Copy the example config file and update it with your Spanner details:
 
 ```powershell
-cd data-injection/spanner-schema
+cd data-injection/spanner
 cp config.example.json config.json
 ```
 
@@ -61,7 +61,7 @@ cp config.example.json config.json
 From this folder run:
 
 ```powershell
-uv run data-injection/spanner-schema/import_paysim.py
+uv run data-injection/spanner/import_paysim.py
 ```
 
 The script will read the prepared CSVs and load nodes/edges into the Spanner
@@ -72,7 +72,7 @@ as tables, then run DDL declared in graph_view.sql to create a graph.
 You can run the included test queries to validate the import:
 
 ```powershell
-uv run data-injection/spanner-schema/test_queries.py
+uv run data-injection/spanner/test_queries.py
 ```
 
 Example (graph query to fetch a Client → Transaction path):
