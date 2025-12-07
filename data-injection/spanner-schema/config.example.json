@@ -1,0 +1,7 @@
+{
+  "instance_name": "your-instance-name",
+  "database_name": "your-database-name",
+  "graph_name": "graph_view",
+  "google_auth_keyfile": "google_auth_keyfile.json"
+}
+

@@ -38,16 +38,23 @@ cp google_auth_keyfile.example.json google_auth_keyfile.json
 
 ## Configure import settings
 
-Open `import_paysim.py` and set the target Spanner details:
+1. Copy the example config file and update it with your Spanner details:
 
-```python
-instanceName = "your-instance-name"
-databaseName = "your-database-name"
-graphName = "your-graph-name"
+```powershell
+cd data-injection/spanner-schema
+cp config.example.json config.json
 ```
 
-Adjust any other settings in `import_paysim.py` if needed (batch sizes, CSV
-paths, etc.).
+2. Edit `config.json` and set your Spanner configuration:
+
+```json
+{
+  "instance_name": "your-instance-name",
+  "database_name": "your-database-name",
+  "graph_name": "graph_view",
+  "google_auth_keyfile": "google_auth_keyfile.json"
+}
+```
 
 ## Run the import
 

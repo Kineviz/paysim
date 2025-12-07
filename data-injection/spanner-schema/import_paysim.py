@@ -4,11 +4,35 @@ import pandas as pd
 from google.cloud import spanner
 from google.oauth2 import service_account
 import os
+import json
 
-instanceName = "demo-2025"
-databaseName = "paysim"
-graphName = "graph_view"
+# Load configuration from config.json
+def load_config():
+    """Load configuration from config.json file"""
+    config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+    if not os.path.exists(config_path):
+        raise FileNotFoundError(
+            f"Configuration file not found: {config_path}\n"
+            "Please copy config.example.json to config.json and update it with your settings."
+        )
+    
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+    # Validate required fields
+    required_fields = ['instance_name', 'database_name', 'graph_name', 'google_auth_keyfile']
+    for field in required_fields:
+        if field not in config:
+            raise ValueError(f"Missing required configuration field: {field}")
+    
+    return config
 
+# Load configuration
+config = load_config()
+instanceName = config['instance_name']
+databaseName = config['database_name']
+graphName = config['graph_name']
+google_auth_keyfile = config['google_auth_keyfile']
 
 data_dir = os.path.join(os.path.dirname(__file__), './../../', 'data')
 raw_data_dir = os.path.join(data_dir, 'raw')
@@ -365,9 +389,13 @@ def main():
         
         # Initialize Spanner client
         print("1. Initializing Spanner client...")
-        credentials = service_account.Credentials.from_service_account_file(
-            os.path.join(os.path.dirname(__file__), 'google_auth_keyfile.json')
-        )
+        auth_keyfile_path = os.path.join(os.path.dirname(__file__), google_auth_keyfile)
+        if not os.path.exists(auth_keyfile_path):
+            raise FileNotFoundError(
+                f"Service account key file not found: {auth_keyfile_path}\n"
+                "Please ensure the google_auth_keyfile path in config.json is correct."
+            )
+        credentials = service_account.Credentials.from_service_account_file(auth_keyfile_path)
         client = spanner.Client(credentials=credentials)
         print(f"Connected to GCP project: {client.project}")
 

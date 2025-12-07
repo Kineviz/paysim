@@ -1,4 +1,5 @@
 google_auth_keyfile.json
+config.json
 .venv/
 __pycache__/
 *.pyc
