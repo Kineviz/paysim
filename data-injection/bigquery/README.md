@@ -7,11 +7,24 @@ Google Cloud BigQuery using property graph schema.
 
 
 ## Prepare data
-> You can skip this section if you already have the prepared CSV files from the data pipeline.
+> Tips: You can skip this section if you already have the prepared CSV files from the data pipeline.
 
-Run the local data pipeline to generate the datasets used by the importer:
+```bash
+# Clone this repository
+git clone git@github.com:Kineviz/paysim.git
 
-```powershell
+cd paysim
+
+# Install and setup uv
+pip install uv
+uv venv --python=python3.11
+
+.venv\Scripts\activate  # Windows; Linux/Mac: source .venv/bin/activate
+
+# Install dependencies
+uv pip install pandas google-cloud-bigquery google-cloud-spanner pandas-gbq db-dtypes python-dotenv
+
+# Prepare data to be loaded to Spanner or BigQuery
 uv run src/prepare_data.py
 ```
 
@@ -22,9 +35,8 @@ pipeline with the command your environment expects.)
 
 1. Copy the example keyfile and add your service account credentials:
 
-```powershell
-cd data-injection/bigquery
-cp google_auth_keyfile.example.json google_auth_keyfile.json
+```bash
+cp data-injection/bigquery/google_auth_keyfile.example.json data-injection/bigquery/google_auth_keyfile.json
 ```
 
 2. Edit `google_auth_keyfile.json` and paste the service-account key JSON you
@@ -34,9 +46,8 @@ cp google_auth_keyfile.example.json google_auth_keyfile.json
 
 1. Copy the example env file and update it with your Spanner details:
 
-```powershell
-cd data-injection/bigquery
-cp example.env .env
+```bash
+cp data-injection/bigquery/example.env data-injection/bigquery/.env
 ```
 
 2. Edit `.env` and set your Spanner configuration:
@@ -52,7 +63,7 @@ GOOGLE_AUTH_KEYFILE="google_auth_keyfile.json"
 
 From this folder run:
 
-```powershell
+```bash
 uv run  data-injection/bigquery/import_to_bigquery.py
 ```
 
@@ -63,7 +74,7 @@ graph.
 
 You can run the included test queries to validate the import:
 
-```powershell
+```bash
 uv run  data-injection/bigquery/test_queries.py
 ```
 
